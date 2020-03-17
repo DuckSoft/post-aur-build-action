@@ -17,6 +17,8 @@ const readDirPromise = (path) => {
 async function run() {
   try {
       const names = await readDirPromise(process.cwd());
+      console.log("CWD Files:" + names);
+
       const pkgs = names.filter(i => i.indexOf(".pkg.tar") !== -1);
       
       pkgs.forEach(pkg => {
