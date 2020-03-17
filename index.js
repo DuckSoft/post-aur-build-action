@@ -19,7 +19,7 @@ async function run() {
       const names = await readDirPromise(process.cwd());
       const pkgs = names.filter(i => i.indexOf(".pkg.tar") !== -1);
       
-      pkgs.array.forEach(pkg => {
+      pkgs.forEach(pkg => {
         console.log("Found package: " + path.join(proces.cwd(), pkg));
       });
 
