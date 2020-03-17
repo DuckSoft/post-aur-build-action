@@ -68,7 +68,7 @@ async function run() {
             .filter(file => file.isFile() && file.name.indexOf(".pkg.tar") !== -1)
             .map(file => ({
               "pkgfile": file.name,
-              "pkgpath": __webpack_require__.ab + "post-aur-build-action/" + entry.name + '/' + file.name
+              "pkgpath": path.join(entry.name, file.name)
             }))
         ).reduce((acc, x) => acc.concat(x), []);
       

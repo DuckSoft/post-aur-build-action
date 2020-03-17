@@ -13,7 +13,7 @@ async function run() {
             .filter(file => file.isFile() && file.name.indexOf(".pkg.tar") !== -1)
             .map(file => ({
               "pkgfile": file.name,
-              "pkgpath": path.join(process.cwd(), entry.name, file.name)
+              "pkgpath": path.join(entry.name, file.name)
             }))
         ).reduce((acc, x) => acc.concat(x), []);
       
