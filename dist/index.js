@@ -61,7 +61,7 @@ const process = __webpack_require__(765);
 // readDir promise version
 const readDirPromise = (path) => {
   return new Promise((resolve, reject) => {
-    fs.readDir(path, (err, files) => {
+    fs.readdir(path, (err, files) => {
       if (err) reject(err);
       else resolve(files);
     })

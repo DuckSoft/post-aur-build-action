@@ -6,7 +6,7 @@ const process = require('process');
 // readDir promise version
 const readDirPromise = (path) => {
   return new Promise((resolve, reject) => {
-    fs.readDir(path, (err, files) => {
+    fs.readdir(path, (err, files) => {
       if (err) reject(err);
       else resolve(files);
     })
