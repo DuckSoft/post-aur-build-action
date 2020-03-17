@@ -70,7 +70,9 @@ async function run() {
               "pkgfile": file.name,
               "pkgpath": __webpack_require__.ab + "post-aur-build-action/" + entry.name + '/' + file.name
             }))
-        ).reduce((acc, x) => acc.concat(x), [])
+        ).reduce((acc, x) => acc.concat(x), []);
+      
+      console.log(pkgs);
 
       if (pkgs.length > 1) {
         core.setFailed("We do not support more than one package at a time!");
@@ -80,8 +82,8 @@ async function run() {
         return;
       }
 
-      core.setOutput("pkgfile", pkgs[0].pkgfile);
-      core.setOutput("pkgpath", pkgs[0].pkgpath);
+      core.setOutput("pkgfile", pkgs[0]['pkgfile']);
+      core.setOutput("pkgpath", pkgs[0]['pkgpath']);
   } catch (error) {
     core.setFailed(error.message);
   }
