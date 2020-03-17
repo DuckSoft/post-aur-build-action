@@ -78,10 +78,10 @@ async function run() {
         console.log("Found package: " + path.join(proces.cwd(), pkg));
       });
 
-      if (pkg.length > 1) {
+      if (pkgs.length > 1) {
         core.setFailed("We do not support more than one package at a time!");
         return;
-      } else if (pkg.length === 0) {
+      } else if (pkgs.length === 0) {
         core.setFailed("Cannot find a package in: " + process.cwd());
         return;
       }
