@@ -1,10 +1,9 @@
 name: 'Post AUR Build Action'
 description: 'process the next steps of a successful AUR build'
+branding:
+  icon: user-check
+  color: orange
 outputs:
-  pkgname: 
-    description: 'the name of the package. eg: qv2ray'
-  pkgver: 
-    description: 'the version of the package. eg: 2.3.0'
   pkgpath: 
     description: 'the path to the package. eg: /home/something/qv2ray-2.3.0-1.pkg.tar.xz'
   pkgfile: 
