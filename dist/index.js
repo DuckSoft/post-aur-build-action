@@ -54,22 +54,41 @@ module.exports = require("os");
 /***/ (function(__unusedmodule, __unusedexports, __webpack_require__) {
 
 const core = __webpack_require__(470);
-const wait = __webpack_require__(949);
+const path = __webpack_require__(622);
+const fs = __webpack_require__(747);
+const process = __webpack_require__(765);
 
+// readDir promise version
+const readDirPromise = (path) => {
+  return new Promise((resolve, reject) => {
+    fs.readDir(path, (err, files) => {
+      if (err) reject(err);
+      else resolve(files);
+    })
+  })
+}
 
 // most @actions toolkit packages have async methods
 async function run() {
-  try { 
-    const ms = core.getInput('milliseconds');
-    console.log(`Waiting ${ms} milliseconds ...`)
+  try {
+      const names = await readDirPromise(process.cwd());
+      const pkgs = names.filter(i => i.indexOf(".pkg.tar") !== -1);
+      
+      pkgs.array.forEach(pkg => {
+        console.log("Found package: " + path.join(proces.cwd(), pkg));
+      });
 
-    core.debug((new Date()).toTimeString())
-    wait(parseInt(ms));
-    core.debug((new Date()).toTimeString())
+      if (pkg.length > 1) {
+        core.setFailed("We do not support more than one package at a time!");
+        return;
+      } else if (pkg.length === 0) {
+        core.setFailed("Cannot find a package in: " + process.cwd());
+        return;
+      }
 
-    core.setOutput('time', new Date().toTimeString());
-  } 
-  catch (error) {
+      core.setOutput("pkgfile", pkgs[0]);
+      core.setOutput("pkgpath", path.join(proces.cwd(), pkgs[0]));
+  } catch (error) {
     core.setFailed(error.message);
   }
 }
@@ -343,21 +362,17 @@ module.exports = require("path");
 
 /***/ }),
 
-/***/ 949:
+/***/ 747:
 /***/ (function(module) {
 
-let wait = function(milliseconds) {
-  return new Promise((resolve, reject) => {
-    if (typeof(milliseconds) !== 'number') { 
-      throw new Error('milleseconds not a number'); 
-    }
+module.exports = require("fs");
 
-    setTimeout(() => resolve("done!"), milliseconds)
-  });
-}
+/***/ }),
 
-module.exports = wait;
+/***/ 765:
+/***/ (function(module) {
 
+module.exports = require("process");
 
 /***/ })
 
