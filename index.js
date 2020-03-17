@@ -3,27 +3,19 @@ const path = require('path');
 const fs = require('fs');
 const process = require('process');
 
-// readDir promise version
-const readDirPromise = (path) => {
-  return new Promise((resolve, reject) => {
-    fs.readdir(path, (err, files) => {
-      if (err) reject(err);
-      else resolve(files);
-    })
-  })
-}
-
 // most @actions toolkit packages have async methods
 async function run() {
   try {
-      const names = await readDirPromise(process.cwd());
-      console.log("CWD Files:" + names);
-
-      const pkgs = names.filter(i => i.indexOf(".pkg.tar") !== -1);
-      
-      pkgs.forEach(pkg => {
-        console.log("Found package: " + path.join(proces.cwd(), pkg));
-      });
+      const pkgs = fs.readdirSync(process.cwd(), { withFileTypes: true })
+        .filter(entry => entry.isDirectory())
+        .map(entry => 
+          fs.readdirSync(entry.name, { withFileTypes: true })
+            .filter(file => file.isFile() && file.name.indexOf(".pkg.tar") !== -1)
+            .map(file => ({
+              "pkgfile": file.name,
+              "pkgpath": path.join(process.pwd(), entry.name, file.name)
+            }))
+        ).reduce((acc, x) => acc.concat(x), [])
 
       if (pkgs.length > 1) {
         core.setFailed("We do not support more than one package at a time!");
@@ -33,8 +25,9 @@ async function run() {
         return;
       }
 
-      core.setOutput("pkgfile", pkgs[0]);
-      core.setOutput("pkgpath", path.join(proces.cwd(), pkgs[0]));
+      let { pkgfile, pkgpath } = pkgs[0];
+      core.setOutput("pkgfile", pkgfile);
+      core.setOutput("pkgpath", pkgpath);
   } catch (error) {
     core.setFailed(error.message);
   }
